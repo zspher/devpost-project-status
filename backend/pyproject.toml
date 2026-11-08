@@ -5,13 +5,15 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "Django",
-    "django-ninja>=1.8.0",
-    "djangorestframework",
+  "django",
+  "django-ninja>=1.8.0",
+  "djangorestframework>=3.18.3",
 ]
 
 [dependency-groups]
-dev = []
+dev = [
+  "django-types>=0.24.0",
+]
 
 [tool.uv.workspace]
 members = []
