@@ -1,0 +1,13 @@
+[project]
+name = "devpost-scraper"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["Django"]
+
+[dependency-groups]
+dev = []
+
+[tool.uv.workspace]
+members = []
