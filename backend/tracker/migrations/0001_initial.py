@@ -5,31 +5,84 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Commit',
+            name="Commit",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateTimeField()),
-                ('hash', models.CharField(max_length=40, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateTimeField()),
+                ("hash", models.CharField(max_length=40, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Project',
+            name="Project",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('git_url', models.URLField()),
-                ('lines_of_code', models.PositiveIntegerField(blank=True, null=True)),
-                ('status', models.CharField(choices=[('no_link', 'No Link'), ('no_access', 'No Access'), ('in_progress', 'In Progress'), ('complete', 'Complete')], default='no_link', max_length=20)),
-                ('first_commit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='tracker.commit')),
-                ('last_commit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='tracker.commit')),
-                ('second_commit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='tracker.commit')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("git_url", models.URLField()),
+                ("lines_of_code", models.PositiveIntegerField(blank=True, null=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("no_link", "No Link"),
+                            ("no_access", "No Access"),
+                            ("in_progress", "In Progress"),
+                            ("complete", "Complete"),
+                        ],
+                        default="no_link",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "first_commit",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="tracker.commit",
+                    ),
+                ),
+                (
+                    "last_commit",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="tracker.commit",
+                    ),
+                ),
+                (
+                    "second_commit",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="tracker.commit",
+                    ),
+                ),
             ],
         ),
     ]

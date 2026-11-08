@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from ninja import ModelSchema, NinjaAPI, Schema
+
 from tracker.models import Project
 
 api = NinjaAPI()
