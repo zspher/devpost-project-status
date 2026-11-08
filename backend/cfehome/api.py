@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.shortcuts import get_object_or_404
 from ninja import ModelSchema, NinjaAPI, Schema
 
 from tracker.models import Project
@@ -37,3 +38,9 @@ def list_projects(request):
     return Project.objects.select_related(
         "last_commit", "first_commit", "second_commit"
     ).all()
+
+
+@api.get("/projects/{project_id}", auth=user_or_anon, response=ProjectSchema)
+def get_project(request, project_id: int):
+    qs = Project.objects.select_related("last_commit", "first_commit", "second_commit")
+    return get_object_or_404(qs, id=project_id)
