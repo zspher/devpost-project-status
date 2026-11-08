@@ -17,6 +17,7 @@ class Commit(models.Model):
 
 
 class Project(models.Model):
+    name = models.CharField(max_length=255)
     git_url = models.URLField()
     lines_of_code = models.PositiveIntegerField(null=True, blank=True)
     last_commit = models.ForeignKey(
@@ -33,4 +34,4 @@ class Project(models.Model):
     )
 
     def __str__(self):
-        return self.git_url
+        return self.name
