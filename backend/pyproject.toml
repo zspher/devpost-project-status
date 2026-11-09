@@ -8,6 +8,7 @@ dependencies = [
   "django",
   "django-ninja>=1.8.0",
   "djangorestframework>=3.18.3",
+  "pygit2",
 ]
 
 [dependency-groups]
