@@ -20,6 +20,7 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     git_url = models.URLField()
     lines_of_code = models.PositiveIntegerField(null=True, blank=True)
+    total_commits = models.PositiveIntegerField(null=True, blank=True)
     last_commit = models.ForeignKey(
         Commit, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
     )
