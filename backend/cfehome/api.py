@@ -137,7 +137,7 @@ def refresh_project(request, project_id: int):
     try:
         git = GitUtils(giturl=project.git_url, name=f"{project.id}-{project.name}")
         if git.path.exists():
-            git.pull_rebase()
+            git.pull()
         else:
             git.clone()
         _update_commit_fields(project, git)

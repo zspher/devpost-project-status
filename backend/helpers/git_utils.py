@@ -34,8 +34,8 @@ class GitUtils:
             count += 1
         return count, first, second, last
 
-    def pull_rebase(self) -> None:
-        """Pull changes from origin with rebase. Always follows remote on conflict."""
+    def pull(self) -> None:
+        """Pull changes from origin, hard-syncing to the remote state."""
         repo = pygit2.Repository(str(self.path))
 
         # Fetch from origin
@@ -47,23 +47,14 @@ class GitUtils:
         if current_branch is None:
             raise pygit2.GitError("No current branch found")
         upstream = current_branch.upstream
+        remote_target = upstream.target
 
         # If already up to date, nothing to do
-        if repo.head.target == upstream.target:
+        if repo.head.target == remote_target:
             return
 
-        # Attempt rebase
-        try:
-            rebase = repo.rebase(repo.head.target, upstream.target)
-            for operation in rebase:
-                commit = repo.get(operation.id)
-                rebase.commit(
-                    author=commit.author,
-                    committer=commit.committer,
-                    message=commit.message,
-                )
-            rebase.finish()
-        except pygit2.GitError:
-            # On conflict, abort and hard reset to upstream (always follow remote)
-            rebase.abort()
-            repo.reset(upstream.target, pygit2.GIT_RESET_HARD)
+        # Hard sync to remote (https://stackoverflow.com/a/27786533)
+        repo.checkout_tree(repo.get(remote_target))
+        upstream_branch_ref = repo.lookup_reference(upstream.name)
+        upstream_branch_ref.set_target(remote_target)
+        repo.head.set_target(remote_target)
