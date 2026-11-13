@@ -102,3 +102,19 @@ def update_project(request, project_id: int, payload: ProjectCreateSchema):
     project.save()
     _sync_project_git(project)
     return project
+
+
+@api.post("/projects/{project_id}/refresh", auth=user_or_anon, response=ProjectSchema)
+def refresh_project(request, project_id: int):
+    project = get_object_or_404(Project, id=project_id)
+    try:
+        git = GitUtils(giturl=project.git_url, name=project.name)
+        if git.path.exists():
+            git.pull_rebase()
+        else:
+            git.clone()
+        _update_commit_fields(project, git)
+    except Exception:
+        project.status = Status.NO_ACCESS
+    project.save()
+    return project
