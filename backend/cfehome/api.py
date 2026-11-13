@@ -3,7 +3,8 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404
 from ninja import ModelSchema, NinjaAPI, Schema
 
-from tracker.models import Project
+from helpers import GitUtils
+from tracker.models import Commit, Project, Status
 
 api = NinjaAPI()
 
@@ -44,3 +45,60 @@ def list_projects(request):
 def get_project(request, project_id: int):
     qs = Project.objects.select_related("last_commit", "first_commit", "second_commit")
     return get_object_or_404(qs, id=project_id)
+
+
+class ProjectCreateSchema(Schema):
+    name: str
+    git_url: str
+
+
+def _update_commit_fields(project: Project, git: GitUtils) -> None:
+    """Extract boundary commits from an already-cloned repo and update the project."""
+    count, first, second, last = git.get_boundary_commits()
+
+    project.total_commits = count
+    project.status = Status.COMPLETE
+
+    if first:
+        project.first_commit, _ = Commit.objects.get_or_create(
+            hash=str(first.id),
+            defaults={"date": datetime.fromtimestamp(first.commit_time)},
+        )
+    if second:
+        project.second_commit, _ = Commit.objects.get_or_create(
+            hash=str(second.id),
+            defaults={"date": datetime.fromtimestamp(second.commit_time)},
+        )
+    if last:
+        project.last_commit, _ = Commit.objects.get_or_create(
+            hash=str(last.id),
+            defaults={"date": datetime.fromtimestamp(last.commit_time)},
+        )
+
+
+def _sync_project_git(project: Project) -> None:
+    """Clone the repo and populate commit metadata. Sets status accordingly."""
+    try:
+        git = GitUtils(giturl=project.git_url, name=project.name)
+        git.clone()
+        _update_commit_fields(project, git)
+    except Exception:
+        project.status = Status.NO_ACCESS
+    project.save()
+
+
+@api.post("/projects/", auth=user_or_anon, response=ProjectSchema)
+def create_project(request, payload: ProjectCreateSchema):
+    project = Project.objects.create(name=payload.name, git_url=payload.git_url)
+    _sync_project_git(project)
+    return project
+
+
+@api.put("/projects/{project_id}", auth=user_or_anon, response=ProjectSchema)
+def update_project(request, project_id: int, payload: ProjectCreateSchema):
+    project = get_object_or_404(Project, id=project_id)
+    project.name = payload.name
+    project.git_url = payload.git_url
+    project.save()
+    _sync_project_git(project)
+    return project
