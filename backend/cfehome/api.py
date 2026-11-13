@@ -34,7 +34,7 @@ class ProjectSchema(ModelSchema):
 
     class Meta:
         model = Project
-        fields = ("id", "name", "git_url", "devpost_url", "lines_of_code", "status")
+        fields = ("id", "name", "git_url", "devpost_url", "lines_of_code", "total_commits", "status")
 
 
 @api.get("/projects/", auth=user_or_anon, response=list[ProjectSchema])
