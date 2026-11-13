@@ -1,6 +1,7 @@
 import shutil
 from datetime import datetime
 
+import pygit2
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from ninja import ModelSchema, NinjaAPI, Schema
@@ -27,13 +28,13 @@ class CommitSchema(Schema):
 
 
 class ProjectSchema(ModelSchema):
-    last_commit: CommitSchema | None
-    first_commit: CommitSchema | None
-    second_commit: CommitSchema | None
+    last_commit: CommitSchema | None = None
+    first_commit: CommitSchema | None = None
+    second_commit: CommitSchema | None = None
 
     class Meta:
         model = Project
-        fields = ["id", "name", "git_url", "lines_of_code", "status"]
+        fields = ("id", "name", "git_url", "lines_of_code", "status")
 
 
 @api.get("/projects/", auth=user_or_anon, response=list[ProjectSchema])
@@ -84,7 +85,7 @@ def _sync_project_git(project: Project) -> None:
         git = GitUtils(giturl=project.git_url, name=project.name)
         git.clone()
         _update_commit_fields(project, git)
-    except Exception:
+    except pygit2.GitError:
         project.status = Status.NO_ACCESS
     project.save()
 
@@ -116,7 +117,7 @@ def refresh_project(request, project_id: int):
         else:
             git.clone()
         _update_commit_fields(project, git)
-    except Exception:
+    except pygit2.GitError:
         project.status = Status.NO_ACCESS
     project.save()
     return project
@@ -127,7 +128,11 @@ def delete_project(request, project_id: int):
     project = get_object_or_404(Project, id=project_id)
 
     # Collect commits to check for orphans after deletion
-    commits = [c for c in [project.first_commit, project.second_commit, project.last_commit] if c]
+    commits = [
+        c
+        for c in [project.first_commit, project.second_commit, project.last_commit]
+        if c
+    ]
 
     # Remove local clone
     git = GitUtils(giturl=project.git_url, name=project.name)
