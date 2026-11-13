@@ -82,6 +82,8 @@
               # backend deps
               pythonEnv
               uv
+              ruff # formatter
+              ty # lsp
 
               # frontend deps
               bun
@@ -94,6 +96,7 @@
               UV_PYTHON = pythonSet.python.interpreter;
               UV_PYTHON_DOWNLOADS = "never";
               UV_PROJECT_ENVIRONMENT = pythonEnv; # prevent creating .venv
+              VIRTUAL_ENV = pythonEnv;
             };
             shellHook = ''
               unset PYTHONPATH
