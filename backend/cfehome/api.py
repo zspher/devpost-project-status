@@ -1,5 +1,5 @@
 import shutil
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pygit2
 from django.db.models import Q
@@ -74,17 +74,17 @@ def _update_commit_fields(project: Project, git: GitUtils) -> None:
     if first:
         project.first_commit, _ = Commit.objects.get_or_create(
             hash=str(first.id),
-            defaults={"date": datetime.fromtimestamp(first.commit_time)},
+            defaults={"date": datetime.fromtimestamp(first.commit_time, tz=UTC)},
         )
     if second:
         project.second_commit, _ = Commit.objects.get_or_create(
             hash=str(second.id),
-            defaults={"date": datetime.fromtimestamp(second.commit_time)},
+            defaults={"date": datetime.fromtimestamp(second.commit_time, tz=UTC)},
         )
     if last:
         project.last_commit, _ = Commit.objects.get_or_create(
             hash=str(last.id),
-            defaults={"date": datetime.fromtimestamp(last.commit_time)},
+            defaults={"date": datetime.fromtimestamp(last.commit_time, tz=UTC)},
         )
 
 
