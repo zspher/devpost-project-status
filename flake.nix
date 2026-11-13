@@ -87,6 +87,7 @@
 
               # frontend deps
               bun
+              biome
 
               # utils
               hurl
@@ -97,6 +98,7 @@
               UV_PYTHON_DOWNLOADS = "never";
               UV_PROJECT_ENVIRONMENT = pythonEnv; # prevent creating .venv
               VIRTUAL_ENV = pythonEnv;
+              BIOME_BINARY = "${pkgs.biome}/bin/biome";
             };
             shellHook = ''
               unset PYTHONPATH
