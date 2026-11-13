@@ -34,7 +34,15 @@ class ProjectSchema(ModelSchema):
 
     class Meta:
         model = Project
-        fields = ("id", "name", "git_url", "devpost_url", "lines_of_code", "total_commits", "status")
+        fields = (
+            "id",
+            "name",
+            "git_url",
+            "devpost_url",
+            "lines_of_code",
+            "total_commits",
+            "status",
+        )
 
 
 @api.get("/projects/", auth=user_or_anon, response=list[ProjectSchema])
@@ -95,14 +103,24 @@ def _sync_project_git(project: Project) -> None:
 def create_project(request, payload: ProjectCreateSchema):
     if Project.objects.filter(devpost_url=payload.devpost_url).exists():
         return 409, {"detail": "A project with this devpost URL already exists."}
-    project = Project.objects.create(name=payload.name, git_url=payload.git_url, devpost_url=payload.devpost_url)
+    project = Project.objects.create(
+        name=payload.name, git_url=payload.git_url, devpost_url=payload.devpost_url
+    )
     _sync_project_git(project)
     return 201, project
 
 
-@api.put("/projects/{project_id}", auth=user_or_anon, response={200: ProjectSchema, 409: dict})
+@api.put(
+    "/projects/{project_id}",
+    auth=user_or_anon,
+    response={200: ProjectSchema, 409: dict},
+)
 def update_project(request, project_id: int, payload: ProjectCreateSchema):
-    if Project.objects.filter(devpost_url=payload.devpost_url).exclude(id=project_id).exists():
+    if (
+        Project.objects.filter(devpost_url=payload.devpost_url)
+        .exclude(id=project_id)
+        .exists()
+    ):
         return 409, {"detail": "A project with this devpost URL already exists."}
     project = get_object_or_404(Project, id=project_id)
     project.name = payload.name
