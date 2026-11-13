@@ -1,5 +1,5 @@
 import shutil
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pygit2
 from django.db.models import Q

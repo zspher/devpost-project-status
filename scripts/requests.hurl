@@ -41,3 +41,30 @@ HTTP 204
 DELETE http://localhost:8000/api/projects/909
 
 HTTP 404
+
+# CORS: allowed origin gets CORS headers on a simple request
+GET http://localhost:8000/api/projects/
+Origin: http://localhost:3000
+
+HTTP 200
+[Asserts]
+header "Access-Control-Allow-Origin" == "http://localhost:3000"
+
+# CORS: preflight from allowed origin
+OPTIONS http://localhost:8000/api/projects/
+Origin: http://localhost:3000
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type
+
+HTTP 200
+[Asserts]
+header "Access-Control-Allow-Origin" == "http://localhost:3000"
+header "Access-Control-Allow-Methods" contains "POST"
+
+# CORS: disallowed origin gets NO CORS headers
+GET http://localhost:8000/api/projects/
+Origin: http://evil.example.com
+
+HTTP 200
+[Asserts]
+header "Access-Control-Allow-Origin" not exists
