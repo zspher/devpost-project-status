@@ -19,6 +19,7 @@ class Commit(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=255)
     git_url = models.URLField()
+    devpost_url = models.URLField(unique=True)
     lines_of_code = models.PositiveIntegerField(null=True, blank=True)
     total_commits = models.PositiveIntegerField(null=True, blank=True)
     last_commit = models.ForeignKey(

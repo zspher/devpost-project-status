@@ -34,7 +34,7 @@ class ProjectSchema(ModelSchema):
 
     class Meta:
         model = Project
-        fields = ("id", "name", "git_url", "lines_of_code", "status")
+        fields = ("id", "name", "git_url", "devpost_url", "lines_of_code", "status")
 
 
 @api.get("/projects/", auth=user_or_anon, response=list[ProjectSchema])
@@ -53,6 +53,7 @@ def get_project(request, project_id: int):
 class ProjectCreateSchema(Schema):
     name: str
     git_url: str
+    devpost_url: str
 
 
 def _update_commit_fields(project: Project, git: GitUtils) -> None:
@@ -90,21 +91,26 @@ def _sync_project_git(project: Project) -> None:
     project.save()
 
 
-@api.post("/projects/", auth=user_or_anon, response=ProjectSchema)
+@api.post("/projects/", auth=user_or_anon, response={201: ProjectSchema, 409: dict})
 def create_project(request, payload: ProjectCreateSchema):
-    project = Project.objects.create(name=payload.name, git_url=payload.git_url)
+    if Project.objects.filter(devpost_url=payload.devpost_url).exists():
+        return 409, {"detail": "A project with this devpost URL already exists."}
+    project = Project.objects.create(name=payload.name, git_url=payload.git_url, devpost_url=payload.devpost_url)
     _sync_project_git(project)
-    return project
+    return 201, project
 
 
-@api.put("/projects/{project_id}", auth=user_or_anon, response=ProjectSchema)
+@api.put("/projects/{project_id}", auth=user_or_anon, response={200: ProjectSchema, 409: dict})
 def update_project(request, project_id: int, payload: ProjectCreateSchema):
+    if Project.objects.filter(devpost_url=payload.devpost_url).exclude(id=project_id).exists():
+        return 409, {"detail": "A project with this devpost URL already exists."}
     project = get_object_or_404(Project, id=project_id)
     project.name = payload.name
     project.git_url = payload.git_url
+    project.devpost_url = payload.devpost_url
     project.save()
     _sync_project_git(project)
-    return project
+    return 200, project
 
 
 @api.post("/projects/{project_id}/refresh", auth=user_or_anon, response=ProjectSchema)
