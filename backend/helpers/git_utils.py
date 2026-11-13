@@ -2,6 +2,7 @@ import shutil
 from pathlib import Path
 
 import pygit2
+from pygit2.enums import SortMode
 
 
 class GitUtils:
@@ -20,12 +21,12 @@ class GitUtils:
 
     def get_boundary_commits(
         self,
-    ) -> tuple[int, pygit2.Commit, pygit2.Commit | None, pygit2.Commit]:
+    ) -> tuple[int, pygit2.Commit | None, pygit2.Commit | None, pygit2.Commit | None]:
         """Return (count, first, second, last) commits in chronological order."""
         repo = pygit2.Repository(str(self.path))
         count = 0
         first = second = last = None
-        for commit in repo.walk(repo.head.target, pygit2.GIT_SORT_TIME):
+        for commit in repo.walk(repo.head.target, SortMode.TOPOLOGICAL):
             if last is None:
                 last = commit
             second = first
