@@ -1,5 +1,7 @@
+import shutil
 from datetime import datetime
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from ninja import ModelSchema, NinjaAPI, Schema
 
@@ -118,3 +120,28 @@ def refresh_project(request, project_id: int):
         project.status = Status.NO_ACCESS
     project.save()
     return project
+
+
+@api.delete("/projects/{project_id}", auth=user_or_anon, response={204: None})
+def delete_project(request, project_id: int):
+    project = get_object_or_404(Project, id=project_id)
+
+    # Collect commits to check for orphans after deletion
+    commits = [c for c in [project.first_commit, project.second_commit, project.last_commit] if c]
+
+    # Remove local clone
+    git = GitUtils(giturl=project.git_url, name=project.name)
+    if git.path.exists():
+        shutil.rmtree(git.path)
+
+    project.delete()
+
+    # Delete orphaned commits not referenced by any other project
+    for commit in commits:
+        still_referenced = Project.objects.filter(
+            Q(first_commit=commit) | Q(second_commit=commit) | Q(last_commit=commit)
+        ).exists()
+        if not still_referenced:
+            commit.delete()
+
+    return 204, None
