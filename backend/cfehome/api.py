@@ -82,7 +82,7 @@ def _update_commit_fields(project: Project, git: GitUtils) -> None:
 def _sync_project_git(project: Project) -> None:
     """Clone the repo and populate commit metadata. Sets status accordingly."""
     try:
-        git = GitUtils(giturl=project.git_url, name=project.name)
+        git = GitUtils(giturl=project.git_url, name=f"{project.id}-{project.name}")
         git.clone()
         _update_commit_fields(project, git)
     except pygit2.GitError:
@@ -111,7 +111,7 @@ def update_project(request, project_id: int, payload: ProjectCreateSchema):
 def refresh_project(request, project_id: int):
     project = get_object_or_404(Project, id=project_id)
     try:
-        git = GitUtils(giturl=project.git_url, name=project.name)
+        git = GitUtils(giturl=project.git_url, name=f"{project.id}-{project.name}")
         if git.path.exists():
             git.pull_rebase()
         else:
@@ -135,7 +135,7 @@ def delete_project(request, project_id: int):
     ]
 
     # Remove local clone
-    git = GitUtils(giturl=project.git_url, name=project.name)
+    git = GitUtils(giturl=project.git_url, name=f"{project.id}-{project.name}")
     if git.path.exists():
         shutil.rmtree(git.path)
 
