@@ -85,6 +85,9 @@
 
               # frontend deps
               bun
+
+              # utils
+              hurl
             ];
             env = {
               UV_NO_SYNC = "1";
