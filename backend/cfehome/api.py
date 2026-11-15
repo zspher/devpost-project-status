@@ -60,7 +60,7 @@ def get_project(request, project_id: int):
 
 class ProjectCreateSchema(Schema):
     name: str
-    git_url: str
+    git_url: str = ""
     devpost_url: str
 
 
@@ -90,6 +90,10 @@ def _update_commit_fields(project: Project, git: GitUtils) -> None:
 
 def _sync_project_git(project: Project) -> None:
     """Clone the repo and populate commit metadata. Sets status accordingly."""
+    if not project.git_url:
+        project.status = Status.NO_LINK
+        project.save()
+        return
     try:
         git = GitUtils(giturl=project.git_url, name=f"{project.id}-{project.name}")
         git.clone()
