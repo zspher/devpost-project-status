@@ -1,5 +1,6 @@
 import { cn } from "cn";
 import { DeleteProjectButton } from "@/components/delete-project-button";
+import { RefreshProjectButton } from "@/components/refresh-project-button";
 import {
 	Card,
 	CardContent,
@@ -152,10 +153,16 @@ export async function ProjectsTable() {
 										</a>
 									</TableCell>
 									<TableCell>
-										<DeleteProjectButton
-											projectId={project.id}
-											projectName={project.name}
-										/>
+										<div className="flex items-center gap-1">
+											<RefreshProjectButton
+												projectId={project.id}
+												projectName={project.name}
+											/>
+											<DeleteProjectButton
+												projectId={project.id}
+												projectName={project.name}
+											/>
+										</div>
 									</TableCell>
 								</TableRow>
 							))}
