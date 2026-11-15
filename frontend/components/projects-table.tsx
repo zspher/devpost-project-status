@@ -1,6 +1,5 @@
 import { cn } from "cn";
-import { DeleteProjectButton } from "@/components/delete-project-button";
-import { RefreshProjectButton } from "@/components/refresh-project-button";
+import { ProjectRow } from "@/components/project-row";
 import {
 	Card,
 	CardContent,
@@ -11,12 +10,13 @@ import {
 import {
 	Table,
 	TableBody,
-	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
 import { getProjects, type Project, type ProjectStatus } from "@/lib/api";
+
+const COLUMN_COUNT = 9;
 
 const STATUS_STYLES: Record<ProjectStatus, string> = {
 	no_link: "bg-muted text-muted-foreground",
@@ -104,6 +104,9 @@ export async function ProjectsTable() {
 					<Table>
 						<TableHeader>
 							<TableRow>
+								<TableHead>
+									<span className="sr-only">Expand</span>
+								</TableHead>
 								<TableHead>Name</TableHead>
 								<TableHead>Status</TableHead>
 								<TableHead>Commits</TableHead>
@@ -118,53 +121,13 @@ export async function ProjectsTable() {
 						</TableHeader>
 						<TableBody>
 							{projects.map((project) => (
-								<TableRow key={project.id}>
-									<TableCell className="font-medium">{project.name}</TableCell>
-									<TableCell>
-										<StatusBadge status={project.status} />
-									</TableCell>
-									<TableCell>{project.total_commits ?? "—"}</TableCell>
-									<TableCell>{project.lines_of_code ?? "—"}</TableCell>
-									<TableCell className="whitespace-nowrap">
-										<LastCommit project={project} />
-									</TableCell>
-									<TableCell className="max-w-48 truncate">
-										{project.git_url ? (
-											<a
-												href={project.git_url}
-												target="_blank"
-												rel="noreferrer"
-												className="text-primary underline-offset-4 hover:underline"
-											>
-												{project.git_url}
-											</a>
-										) : (
-											"—"
-										)}
-									</TableCell>
-									<TableCell className="max-w-48 truncate">
-										<a
-											href={project.devpost_url}
-											target="_blank"
-											rel="noreferrer"
-											className="text-primary underline-offset-4 hover:underline"
-										>
-											{project.devpost_url}
-										</a>
-									</TableCell>
-									<TableCell>
-										<div className="flex items-center gap-1">
-											<RefreshProjectButton
-												projectId={project.id}
-												projectName={project.name}
-											/>
-											<DeleteProjectButton
-												projectId={project.id}
-												projectName={project.name}
-											/>
-										</div>
-									</TableCell>
-								</TableRow>
+								<ProjectRow
+									key={project.id}
+									project={project}
+									statusBadge={<StatusBadge status={project.status} />}
+									lastCommit={<LastCommit project={project} />}
+									colSpan={COLUMN_COUNT}
+								/>
 							))}
 						</TableBody>
 					</Table>
