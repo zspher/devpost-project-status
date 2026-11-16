@@ -91,6 +91,7 @@
 
               # utils
               hurl
+              just
             ];
             env = {
               UV_NO_SYNC = "1";
