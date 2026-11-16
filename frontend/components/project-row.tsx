@@ -1,13 +1,10 @@
 "use client";
 
+import { FlexRender } from "@tanstack/react-table";
 import { cn } from "cn";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
-import { DeleteProjectButton } from "@/components/delete-project-button";
-import { RefreshProjectButton } from "@/components/refresh-project-button";
-import { Button } from "@/components/ui/button";
+import type { ProjectTableRow } from "@/components/projects-table-client";
 import { TableCell, TableRow } from "@/components/ui/table";
-import type { CommitInfo, Project } from "@/lib/api";
+import type { CommitInfo } from "@/lib/api";
 
 /** Convert a UTC ISO date string to UTC-6 and format it with date and time. */
 function formatDateTimeUtcMinus6(iso: string): string {
@@ -57,96 +54,43 @@ function CommitDetail({
 	);
 }
 
-interface ProjectRowProps {
-	project: Project;
-	statusBadge: React.ReactNode;
-	lastCommit: React.ReactNode;
-	colSpan: number;
-}
-
-export function ProjectRow({ project, statusBadge, colSpan }: ProjectRowProps) {
-	const [expanded, setExpanded] = useState(false);
+export function ProjectRow({ row }: { row: ProjectTableRow }) {
+	const expanded = row.getIsExpanded();
+	const visibleCells = row.getVisibleCells();
 
 	return (
 		<>
 			<TableRow data-state={expanded ? "selected" : undefined}>
-				<TableCell className="w-8 pr-0">
-					<Button
-						type="button"
-						variant="ghost"
-						size="icon-xs"
-						aria-expanded={expanded}
-						aria-label={
-							expanded
-								? `Collapse commit details for ${project.name}`
-								: `Expand commit details for ${project.name}`
-						}
-						onClick={() => setExpanded((prev) => !prev)}
+				{visibleCells.map((cell) => (
+					<TableCell
+						key={cell.id}
+						className={cell.column.columnDef.meta?.className}
 					>
-						{expanded ? <ChevronDown /> : <ChevronRight />}
-					</Button>
-				</TableCell>
-				<TableCell className="font-medium">{project.name}</TableCell>
-				<TableCell>{statusBadge}</TableCell>
-				<TableCell>{project.total_commits ?? "—"}</TableCell>
-				<TableCell className="max-w-48 truncate">
-					{project.git_url ? (
-						<a
-							href={project.git_url}
-							target="_blank"
-							rel="noreferrer"
-							className="text-primary underline-offset-4 hover:underline"
-						>
-							{project.git_url}
-						</a>
-					) : (
-						"—"
-					)}
-				</TableCell>
-				<TableCell className="max-w-48 truncate">
-					<a
-						href={project.devpost_url}
-						target="_blank"
-						rel="noreferrer"
-						className="text-primary underline-offset-4 hover:underline"
-					>
-						{project.devpost_url}
-					</a>
-				</TableCell>
-				<TableCell>
-					<div className="flex items-center gap-1">
-						<RefreshProjectButton
-							projectId={project.id}
-							projectName={project.name}
-						/>
-						<DeleteProjectButton
-							projectId={project.id}
-							projectName={project.name}
-						/>
-					</div>
-				</TableCell>
+						<FlexRender cell={cell} />
+					</TableCell>
+				))}
 			</TableRow>
 			{expanded && (
 				<TableRow className="bg-muted/30 hover:bg-muted/30">
 					<TableCell
-						colSpan={colSpan}
+						colSpan={visibleCells.length}
 						className={cn("whitespace-normal", "p-4")}
 					>
 						<div className="grid gap-4 sm:grid-cols-3">
 							<CommitDetail
 								label="First commit"
-								commit={project.first_commit}
-								project_url={project.git_url}
+								commit={row.original.first_commit}
+								project_url={row.original.git_url}
 							/>
 							<CommitDetail
 								label="Second commit"
-								commit={project.second_commit}
-								project_url={project.git_url}
+								commit={row.original.second_commit}
+								project_url={row.original.git_url}
 							/>
 							<CommitDetail
 								label="Last commit"
-								commit={project.last_commit}
-								project_url={project.git_url}
+								commit={row.original.last_commit}
+								project_url={row.original.git_url}
 							/>
 						</div>
 					</TableCell>
