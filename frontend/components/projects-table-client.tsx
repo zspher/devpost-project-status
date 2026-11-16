@@ -93,9 +93,7 @@ export function ProjectsTableClient({ projects }: { projects: Project[] }) {
 			<CardContent className="flex flex-col gap-4">
 				<div className="flex items-end gap-2">
 					<div className="flex flex-col gap-1.5">
-						<Label htmlFor="commit-filter">
-							Last commit after (UTC-6)
-						</Label>
+						<Label htmlFor="commit-filter">Last commit after (UTC-6)</Label>
 						<Input
 							id="commit-filter"
 							type="datetime-local"
@@ -105,11 +103,7 @@ export function ProjectsTableClient({ projects }: { projects: Project[] }) {
 						/>
 					</div>
 					{cutoff && (
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={() => setCutoff("")}
-						>
+						<Button variant="outline" size="sm" onClick={() => setCutoff("")}>
 							Clear
 						</Button>
 					)}
@@ -144,9 +138,7 @@ export function ProjectsTableClient({ projects }: { projects: Project[] }) {
 								<ProjectRow
 									key={project.id}
 									project={project}
-									statusBadge={
-										<StatusBadge status={project.status} />
-									}
+									statusBadge={<StatusBadge status={project.status} />}
 									lastCommit={<LastCommit project={project} />}
 									colSpan={COLUMN_COUNT}
 								/>
