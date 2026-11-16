@@ -1,0 +1,293 @@
+Project Title,Submission Url,Project Status,Judging Status,Highest Step Completed,Project Created At,Project Submitted At,Submission Last Submitted At,About The Project,"""Try it out"" Links",Video Demo Link,Image Gallery URLs,Attached File S3 Key,Opt-In Prizes,Built With,Notes,Team Colleges/Universities,Additional Team Member Count,What Category Is Your Team Submitting Under?,Will Your Team Be Presenting?,"Do You Have A Git Link (Git Hub, Gitlab, Codeburg)?"
+Transit Buddy,https://hack-a-ton-with-friends.devpost.com/submissions/1303329-transit-buddy,Submitted (Gallery/Visible),Pending,Submit,11/14/2026 13:45:57,11/15/2026 12:54:49,11/15/2026 13:00:41,"## Inspiration
+
+## What it does
+
+Allows two ""buddies"" to connect with each other via QR Code or a friends list, and schedule a meetup point, then provides helps the ""buddies"" meetup at a connection point via LRT, and safely get to a destination point.
+
+## How we built it
+
+We built it with React + React Router, TailwindCSS, DaisyUI, Supabase, and QR React. We broke it up into different components we could work on in parallel.
+
+## Challenges we ran into
+
+There were many communication challenges in the group that we eventually overcame, but it definitely was a setback.
+
+## Accomplishments that we're proud of
+
+We're proud of what we learned, overcoming setbacks, and what we accomplished in 24 hours.
+
+## What we learned
+
+Each of us took on separate tasks, some of us were more well-versed in their topics than others but we worked together to solve issues, make PRs, and each learned different things. Some of us learned how to use TypeScript, others learned Supabase - adding onto Supabase some of us learned how to use authentication with it and passwordless logins. We also learned some new packages to generate QR codes.
+
+## What's next for Transit Buddy
+
+Maybe updating it further as an open source project.",https://github.com/bmanke/transit-buddy/,"","","","","react, typescript, supabase, react-router, qr-react, tailwindcss, daisyui","","W.P. Wagner, Northern Alberta Institute of Technology",2,Mystery,Yes,https://github.com/bmanke/transit-buddy
+ASP (Adaptive Study Planner),https://hack-a-ton-with-friends.devpost.com/submissions/1303372-asp-adaptive-study-planner,Submitted (Gallery/Visible),Pending,Submit,11/14/2026 14:05:56,11/15/2026 12:25:04,11/15/2026 12:25:04,"## Inspiration
+
+We wanted to try and increase student productivity by giving them the ability to create a scheduler that will allocate their time, and hopefully take them out of doomscrolling by giving them a sense of how much time is left. (Sense of dread)
+
+## What it does
+
+A user(student) will give the study planner some inputs to help the scheduler plan out time. Firstly you'll set up the hours and days you're available/want to study (there are default values). You will then add tasks with deadlines and in this view you'll be prompted on an estimate of how many hours you think it will take. Optionally other commitments can be added to the scheduler (work, hobbies, etc.). When that is put in the user will be able to generate a plan within the given time frames and allocate work blocks. If a task cannot fit within a time frame the scheduler will alert the user.
+
+## How we built it
+
+We decided to create a fullstack web app with a backend and frontend communicating. We used the django rest framework for api functions which the frontend calls. And in the frontend we decided to use typescript, react and css to display to users. We used Claude as well to assist in roadmapping the project, as well as creating scaffolding and assisting in writing some logic code in the backend and designing the frontend based off our planned ui.
+
+## Challenges we ran into
+
+A challenge we ran in to was staying within scope and not letting the project get too big for the timeframe. Honestly even with us trying to reel it in the scope got quite big which prompted further use of ai to help with productivity.
+
+## Accomplishments that we're proud of
+
+We are proud to present the project that we have built, we took a decent chunk of time to really lay the ground work for what we wanted the project to be. We're also quite proud of how well our team worked together to get it done on time.
+
+## What we learned
+
+We learned that a project can really get out of hand if we don't define a scope and stick to it. We learned how to implement an algorithm and use ai to assist in production.
+
+## What's next for Team Crashouts
+
+The hope is to not actually crashout",https://github.com/TheWeeknder/Team-Crashouts-Hackathon-Project,"","https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/034/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/035/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/036/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/037/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/038/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/039/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/040/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/042/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/922/043/datas/xlarge.png",zip_files/production/144483/zip_files/Adaptive_study_planner.pptx,"","typescript, react, django, css3, python, daisyui, tailwind","","NAIT, Northern Alberta Institute of Technology",3,Educational: Scroll Your Way Back on Track,Yes,https://github.com/TheWeeknder/Team-Crashouts-Hackathon-Project
+ETS-Squared,https://hack-a-ton-with-friends.devpost.com/submissions/1304112-ets-squared,Submitted (Gallery/Visible),Pending,Submit,11/14/2026 19:08:54,11/15/2026 12:54:59,11/15/2026 13:25:58,"## Inspiration
+
+ETS, we talked to you we heard your sufferings and we’ve come to offer an update. the data we received indicated many of the ETS transit users use google maps or Transit app for access and routing. For a truly efficient system the Edmonton Transit system must be robust enough to handle its own population. This would allow proper communication throughout the whole system. We propose a public application that incorporates bus meta data including GPS, bus schedules, proper feedback loop, weather, traffic, &construction. Further more we have proposed a plan for Edmonton and ETS with updates to their hardware for a more robust and seamless user experience.
+
+## What it does
+
+The application pulls data from multiple API's and compiles them to rate and present possible public transit routes to the user. As with other apps, users are able to enter their starting end ending location and are presented with a list of routes. However, our application takes into account often neglected information, such as the possibility of transfer misalignments causing delays in the user's journey.
+
+## How we built it
+
+Our application is built in React. We made extensive use of AI for both the planning and execution of the project. Members of the team brainstormed requirements and researched possible solutions, then worked with AI to generate a project and build plan. From there we used sub-agents to write the code for each feature. We then reviewed functionality and went back to AI tooling to make revisions.
+
+## Challenges we ran into
+
+Our biggest challenge was Anthropic token limits and controlling AI outputs.
+
+## Accomplishments that we're proud of
+
+We are proud of developing such a feature-rich product within a narrow time span.
+
+## What we learned
+
+We learned a lot about the Edmonton Transit system, the applications that have been built to support it, as well as the limitations and process of working through a complex project with an AI-first approach.
+
+## What's next for ETS-Squared
+
+We hope to continue developing and refining the project. In the future we may develop it into a viable alternative to the official ETS app.",https://github.com/SellarsJA/Hack-a-ton-with-friends-2026,"","",zip_files/production/144499/zip_files/Hack-a-Ton-ets-squared.pptx,"","react, next, claude","",NAIT,2,Mystery,Yes,https://github.com/SellarsJA/Hack-a-ton-with-friends-2026
+Feedy,https://hack-a-ton-with-friends.devpost.com/submissions/1305194-feedy,Submitted (Gallery/Visible),Pending,Submit,11/15/2026 01:28:59,11/15/2026 12:30:22,11/15/2026 12:54:20,"## Inspiration
+
+- Our own classes, espcially online classes, where people don't turn on cameras
+- Talking to teachers and other students
+
+## What it does
+
+- An anomoyous way for teachers to run a session where students can join anomoyously and ask qustions or mark their current confusion levels. teachers can answer them out loud (not part of the website) and mark them as answered. afterwards, the teacher can end the session and see a chart of questions and where people are confused.
+
+## How we built it
+
+- To simplify, this project was built on a fly 
+- We first had two members go over the backend using django that has the models, views, and urls and three others making a figma for the front end design
+- then we had three people going over the frontend to make the api calls and context, while some other people worked on the static frontend.
+  - We combined the static and calls togther to make dynamic site.
+  - Then we deployed it on Cloudlare.
+  - Ai use is listed bellow
+
+## Challenges we ran into
+
+- In general, we needed to plan out and delegate tasks better. we came with little to no plan and did things on the fly which lead to a lot of issues such as: -- We were confused what we were doing and what the team was doing in general -- We ran into a lot of merge conflicts due to people working on the same thing at once -- We didn't know what to do after we finished something and people were confused when given code from another person
+- In general LLMS tend to spit out code that is overly complicated or do things that don't make sense. It took a lot of time understanding what it was trying to tell us and what it was trying to do.
+
+## Accomplishments that we're proud of
+
+- This is our first hack-a-ton so even joining is cool and seeing how it is to work as a team
+- That we managed to complete this in time
+- That we have something that might actually be useful for classes/real world
+- For some of this, is our first time using LLM for a project so it was a learning experience how to work with it
+
+## What we learned
+
+- When starting a project, ask other people for what they think of our project before we start working too much on it. We need to see what people feel about it and what is important to people rather than getting too absorbed into making something or coming up with a solution to a problem that doesn't really affect people.
+- Better team planning so that we can work faster with less confusion and less breaking.
+- Commit more, so if something breaks it's easier to see what broke it and go to a previous commit that doesn't break more.
+- LLMS tend to do too much or spit out non-sense code, it's imperative to write good messages and to read carefully through them rather than wave them through and let the entire team suffer because of that.
+
+## What's next for this project
+
+- Auto-Moderation for slurs or curses
+- Teachers can adjust sessions before creating them
+- Teachers can answer questions themselves
+- Students can answer questions students have
+- Fix the frontend to have less spagetti code
+- More permenant deployment
+
+## AI use
+
+- By the end, the majority of the code was written via AI for both frontend and backend.
+- AI was used for the backend, writting almost every model, view, and url for about 90% of it done by it via AI. 10% was our own edits and configurations over it.
+- It was used for the frontend, writting almost every page, component, hooks, and more. About 90% of it was done via AI and 10% was our own editing over it.
+- However we reviewed and went over it ourselves before it went into the main github repo, we actively dived through the code and made understood what was being written. We were more rushed in the end but it was an active proccess with the ai, it was not all written in a couple of prompts but a lot of back and forth with the AI over what it does.
+- Figma files were done by hand with some claude suggestions. basically we do some objects by hand and occasonally ask for suggestions by claude for any changes and see if we want to do said changes.
+- README was generated with AI
+
+## Other source
+
+the apiClient function was made from an instructor from NAIT, taken from the repo: ""[https://github.com/NAIT-SDEV2451/SDEV2451-Fall-2026-A02-Instructor-Examples](https://github.com/NAIT-SDEV2451/SDEV2451-Fall-2026-A02-Instructor-Examples)"" The repo is ran and made by the instructor Dan Mouris for SDEV2451 - Full Stack Software Development.",https://github.com/Larold2464/One-Hit-Wonder-HACK-A-TON,"","",zip_files/production/144489/zip_files/ONE-HIT-WONDER.pptx,"","python, django, jwt, cloudflare, vite, claude","","NAIT, Northern Alberta Institute of Technology (NAIT) - Edmonton, AB, Northern Alberta Institute of Technology",4,Educational: Scroll Your Way Back on Track,Yes,https://github.com/Larold2464/One-Hit-Wonder-HACK-A-TON
+V.Flash64,https://hack-a-ton-with-friends.devpost.com/submissions/1306215-v-flash64,Submitted (Gallery/Visible),Pending,Submit,11/15/2026 09:04:35,11/15/2026 12:10:56,11/15/2026 12:10:56,"## Inspiration
+
+We have been interested in obscure game consoles for a while. And the V.Flash was one of the most interesting: A 3D educational kids console that was like a supercharged version of the PS1. We knew we wanted to see how it operated and how capable it was. We wanted people to be able to develop their own games for the system as we feel like it's a more approachable PS1-like environment to work with; having more modern features while having similar graphics abilities to 5th generation consoles.
+
+## What it does
+
+We have created a unofficial SDK for the V.Flash, allowing curious individuals to make their own games for the console. We have also0 ported Super Mario 64 as a demo proof of concept program to show off what the SDK is capable of.
+
+## How we built it
+
+AI-assisted coding was heavy used, we used Codex with GPT 6.1 Sol; I don’t think it would have been possible in the amount of time provided otherwise. Everything was first ran on an emulator, before being tested on a real console. Open source projects like GCC are used in the SDK to compile to ARMv5 machine code. Ghidra was used along with an MCP to reverse engineer the V.Flash’s hardware and how it works to reimplement in our SDK. The code that the AI wrote was in C and ARMv5 Assembly.
+
+## Challenges we ran into
+
+We ran into difficulties in terms of the emulator we used. The emulator we found for the V.Flash was EXTREMELY inaccurate in terms of graphics emulation and the AI had to figure out the accurate behavior by trial and error. I only managed to get a flat shaded (but GE enabled) version of Mario 64 before the deadline. If I had more time, I would had probably had gotten something closer to what I got on said ""emulator"".
+
+## Accomplishments that we're proud of
+
+We are proud of what we accomplished within the 24 hour time span. We were able to get a proof of concept version of Mario 64 up and running on real hardware with a GE backend, despite many technical difficulties. We were also able to uncover new information about the console.
+
+## What we learned
+
+We have learned so much about how the V.Flash works, how it's graphics engine worked, and how emulators being inaccurate can be problematic. We also learned about how early ARM compilers functioned and how VTech developed the console's architecture.
+
+## What's next for V.Flash64
+
+We hope to improve the Mario 64 proof of concept into an playable port. Including audio support, better remapping to the controller, optimization, improve graphics, etc. We are also going to polish up the SDK before public release on GitHub.","",https://www.youtube.com/watch?v=Q6WWZdzxhMI,"https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/921/877/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/921/878/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/921/879/datas/xlarge.png","","","c, assembly, ai","",Northern Alberta Institute of Technology,0,Wild Card,Yes,""
+What Once Was,https://hack-a-ton-with-friends.devpost.com/submissions/1306350-what-once-was,Submitted (Gallery/Visible),Pending,Submit,11/15/2026 10:32:02,11/15/2026 11:46:11,11/15/2026 13:32:56,"# Team Chocobo
+
+## Inspiration
+
+After the start time, the team set 1 hour to brainstorm as many ideas as possible. The timer was already long over when an idea suddenly came to the team's mind around one and a half hours in. The idea was a range slider to view significant historical events where users could select between 2 different years and see everything that happened in between.
+
+The initial goal was to refine historical media into a selected range and display it.
+
+We figured this would be a challenging project so we scoped in and asked ourselves, ""what is something we all can relate to?"". Well.. media and technology.
+
+Our goal then became to give a user a simple high level dashboard of the most popular media and technology at that specific time. We wanted to refine the multiple search processes of ""what movies were in 1997?"" and ""what games were popular in 1997?"" into one interactive experience.
+
+What Once Was was called What Was however ""once"" was added to make the acronym WOW.
+
+## What it does
+
+Users can explore years from 1995 to 2025 using an interactive timeline. Selecting a year updates the displayed content.
+
+From here, users can see popular movies, music, video games, and technological improvements from that year.
+
+Hovering over movie or game cards will give you fun facts about the media while the music player has a play button to allow the user to preview the song that topped that year's chart.
+
+## How we built it
+
+- Built using React and JavaScript with Tailwind CSS for styling.
+- A local JSON dataset contains the cultural information of each year.
+- The selected year determines which information is displayed.
+- Integrated the Wikipedia/MediaWiki API to retrieve movie, game, and tech images.
+- Integrated Apple iTunes Search API to retrieve music album art and audio.
+- Used React components to separate the different content categories.
+
+## Challenges we ran into
+
+Working with external APIs was a bit challenging as reading through documentation while also juggling building proved to be a big blocker.
+
+The first prototypes was sending almost 500 requests in just a single passthrough of the slider! (imagine going back and forth. one team member tested it and sent almost 5000 requests within 2 minutes..) The team implemented debouncing to prevent those requests from getting fetched and stale.
+
+Deciding on which features to prioritize and keeping the project within scope and manageable within the time we had was one of the hardest parts as features could just be added left and right.
+
+## Accomplishments that we're proud of
+
+The team is particularly proud of the slider, design, and integrating several APIs.
+
+We are also particularly proud of bringing several different cultural categories together into one application.
+
+Lastly, the team is proud of completing a functional project at our first hackathon!
+
+## What we learned
+
+- The team gained experience working with external APIs and handling their responses.
+- We learned more about React component structure, state management, and effects.
+- We learned how to coordinate tasks and collaboration (as messy as it was) for our first ""built from scratch"" project.
+- We learned the importance of balancing visual design, functionality, and development time.
+- We gained experience turning ideas into one working application under a deadline.
+
+## What's next for What Once Was
+
+Beyond the hackathon, the project could expand the timeline to include years before 1995 or later on after 2025. There is also a lot of media we did not implement such as television, anime, books, and other forms of media.
+
+The project could also expand by improving or introducing additional data sources and APIs.
+
+The project is a static website and there is no website. Introducing a backend or database would make managing the expanding the timeline easier.
+
+## AI use
+
+AI was used to:
+
+- generate static JSON data.
+- debug source code.
+- help team with planning components, pages, setup.
+- act as a project manager.
+- draft documentation framework for the repository `README`.",https://what-once-was.netlify.app/,"","https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/920/730/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/920/731/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/920/732/datas/xlarge.png, https://d112y698adiu2z.cloudfront.net/photos/production/solution_photos/005/920/733/datas/xlarge.png",zip_files/production/144494/zip_files/What-Once-Was-hackathon.pptx,"","react, javascript, json, tailwind, daisyui","","NAIT, Northern Alberta Institute of Technlogy, Northern Alberta Institute of Technology",3,Wild Card,Yes,https://github.com/Jay-Playz2019/Refinement-TimeMachine
+Code 200...cus we're ok,https://hack-a-ton-with-friends.devpost.com/submissions/1306522-code-200-cus-we-re-ok,Submitted (Gallery/Visible),Pending,Submit,11/15/2026 11:49:16,11/15/2026 12:37:56,11/15/2026 12:37:56,"## Inspiration
+
+We had a classmate who was sending a schedule (via a screenshot) of our important class assignments, but she got sick one week and stopped posting. That's when we realized how heavily some people relied on that and found it useful.
+
+## What it does
+
+Our chrome extension allows the user to open a tab and be shown the regular google search bar but also a calendar. The calendar can be synced with different calendar apps (android and apple) and all be shown in one. It also allows the syncing of different calendar accounts, so you can see the schedule of those you trust.
+
+## How we built it
+
+We started with the backend and created a local database running on a container, then we started implementing some of the features using HTML and javascript and learning to connect those
+
+## Challenges we ran into
+
+- There were plenty. Our extension heavily relied on the backend that we were not expecting. We had to get majority of the code done for that before we could really touch the frontend (and see an output).
+- So many files and folders! We had organize it really well in order to safely merge things - which we had a lot of merging conflicts.
+
+## Accomplishments that we're proud of
+
+- We got so far in just 24hours! Although we didn't get to our original goal, our output was far better than we expected, especially after starting the project and realizing how tough it could get
+
+## What we learned
+
+- really learning the logic behind how things get made. We may not fully understand the code line-by-line, but we know how we got there and why it was important
+- learning to work as a team. Being able to divide tasks up and push it to the main and it working
+
+## What's next for Code 200...cus we're ok
+
+- I think we'd actually like to finish this project and accomplish our original goal of full functionality. Maybe not know (we need sleep), but one day.",https://github.com/James-Jaffray/Hack-a-thon,https://youtu.be/-8lrMIELxoc,"",zip_files/production/144479/zip_files/Hackathon_-_James__Caleb__Althea.pdf,"","html, json, javascript, dockerfile, css, sql","",Northern Alberta Institute of Technology,2,Wild Card,Yes,https://github.com/James-Jaffray/Hack-a-thon
+Doomstopper,https://hack-a-ton-with-friends.devpost.com/submissions/1306617-doomstopper,Submitted (Gallery/Visible),Pending,Submit,11/15/2026 12:31:16,11/15/2026 12:53:32,11/15/2026 12:53:32,"## Inspiration
+
+Long hours of doomscrolling have inspired us to make Doomstopper.
+
+## What it does
+
+Doomstopper allows users to add webpages they frequent when web-doomscrolling, and after a set time a pop-up appears. The user must answer a question before returning to the page.
+
+## How we built it
+
+Armed with previous knowledge of web-development and JavaScript, alongside the Chrome tutorial for extensions, we developed Doomstopper in conjunction with AI.
+
+## Challenges we ran into
+
+Underestimating the difficulties of developing an extension, as extensions have limited permissions and a size limit. We originally wanted to have the extension ask questions based off of the content the user was consuming; this was not possible within the time frame. We also faced issues with the Git workflow as well.
+
+## Accomplishments that we're proud of
+
+Successfully developing a chrome extension, for the first time.
+
+## What we learned
+
+We learned how to develop a chrome extension from scratch. We learned how to quickly and concisely learn a new concept. We also learned how to combat scope creep within a project in a team environment.
+
+## What's next for Doomstopper
+
+Fully implementing the dynamic web-page based questions. Finally, adding an incrementing difficulty curve for each level of the progress tracker.",https://github.com/kmseutter/Drop-Tables-2026/tree/main,"","",zip_files/production/144490/zip_files/DoomStopper.pptx,"","javascript, html, css, json, chromium","","Northern Alberta Institute of Technology, NAIT, University of Alberta",3,Educational: Scroll Your Way Back on Track,Yes,https://github.com/kmseutter/Drop-Tables-2026/tree/main
