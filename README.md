@@ -5,9 +5,10 @@ A tool developed for the [Hack-A-Ton With Friends](https://www.eventbrite.ca/e/h
 ## Required Dependencies
 see contents of [flake.nix](./flake.nix)
 - [uv](https://docs.astral.sh/uv/)
+- [bun](https://bun.sh/)
 - [hurl](https://hurl.dev/) (optional)
 
 ## Project Install
 
 - [Backend Setup](./backend/README.md) - Django API server with uv
-- Frontend Setup *(coming soon)* - Bun frontend (directory currently empty)
+- [Frontend Setup](./frontend/README.md)  - Next.js webpage
