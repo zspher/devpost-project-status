@@ -1,3 +1,4 @@
+import { ProjectsTableClient } from "@/components/projects-table-client";
 import {
 	Card,
 	CardContent,
@@ -5,7 +6,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { ProjectsTableClient } from "@/components/projects-table-client";
 import { getProjects, type Project } from "@/lib/api";
 
 export async function ProjectsTable() {

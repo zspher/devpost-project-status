@@ -22,19 +22,29 @@ function formatDateTimeUtcMinus6(iso: string): string {
 function CommitDetail({
 	label,
 	commit,
+	project_url,
 }: {
 	label: string;
+	project_url: string;
 	commit: CommitInfo | null;
 }) {
+	const short_hash = commit?.hash.slice(0, 8);
 	return (
 		<div className="flex flex-col gap-0.5">
 			<span className="text-xs font-medium text-muted-foreground">{label}</span>
 			{commit ? (
 				<dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 text-sm">
-					<dt className="text-muted-foreground">ID</dt>
-					<dd>{commit.id}</dd>
 					<dt className="text-muted-foreground">Hash</dt>
-					<dd className="font-mono text-xs">{commit.hash}</dd>
+					<dd className="font-mono text-xs">
+						<a
+							href={`${project_url}/commit/${short_hash}`}
+							target="_blank"
+							rel="noreferrer"
+							className="text-primary underline-offset-4 hover:underline"
+						>
+							{short_hash}
+						</a>
+					</dd>
 					<dt className="text-muted-foreground">Date</dt>
 					<dd className="whitespace-nowrap">
 						{formatDateTimeUtcMinus6(commit.date)}
@@ -54,12 +64,7 @@ interface ProjectRowProps {
 	colSpan: number;
 }
 
-export function ProjectRow({
-	project,
-	statusBadge,
-	lastCommit,
-	colSpan,
-}: ProjectRowProps) {
+export function ProjectRow({ project, statusBadge, colSpan }: ProjectRowProps) {
 	const [expanded, setExpanded] = useState(false);
 
 	return (
@@ -84,8 +89,6 @@ export function ProjectRow({
 				<TableCell className="font-medium">{project.name}</TableCell>
 				<TableCell>{statusBadge}</TableCell>
 				<TableCell>{project.total_commits ?? "—"}</TableCell>
-				<TableCell>{project.lines_of_code ?? "—"}</TableCell>
-				<TableCell className="whitespace-nowrap">{lastCommit}</TableCell>
 				<TableCell className="max-w-48 truncate">
 					{project.git_url ? (
 						<a
@@ -133,12 +136,18 @@ export function ProjectRow({
 							<CommitDetail
 								label="First commit"
 								commit={project.first_commit}
+								project_url={project.git_url}
 							/>
 							<CommitDetail
 								label="Second commit"
 								commit={project.second_commit}
+								project_url={project.git_url}
 							/>
-							<CommitDetail label="Last commit" commit={project.last_commit} />
+							<CommitDetail
+								label="Last commit"
+								commit={project.last_commit}
+								project_url={project.git_url}
+							/>
 						</div>
 					</TableCell>
 				</TableRow>

@@ -124,8 +124,6 @@ export function ProjectsTableClient({ projects }: { projects: Project[] }) {
 								<TableHead>Name</TableHead>
 								<TableHead>Status</TableHead>
 								<TableHead>Commits</TableHead>
-								<TableHead>Lines of code</TableHead>
-								<TableHead>Last commit</TableHead>
 								<TableHead>Git URL</TableHead>
 								<TableHead>Devpost URL</TableHead>
 								<TableHead>
