@@ -34,6 +34,41 @@ export async function getProjects(): Promise<Project[]> {
 	return response.json();
 }
 
+export interface ProjectUpdatePayload {
+	name: string;
+	git_url: string;
+	devpost_url: string;
+}
+
+export async function updateProject(
+	id: number,
+	payload: ProjectUpdatePayload,
+): Promise<Project> {
+	const response = await fetch(`${API_URL}/api/projects/${id}`, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(payload),
+	});
+	if (!response.ok) {
+		let message = `Failed to update project: HTTP ${response.status}`;
+		try {
+			const body: unknown = await response.json();
+			if (
+				typeof body === "object" &&
+				body !== null &&
+				"detail" in body &&
+				typeof body.detail === "string"
+			) {
+				message = body.detail;
+			}
+		} catch {
+			// Response wasn't JSON; keep the generic message.
+		}
+		throw new Error(message);
+	}
+	return response.json();
+}
+
 export async function deleteProject(id: number): Promise<void> {
 	const response = await fetch(`${API_URL}/api/projects/${id}`, {
 		method: "DELETE",

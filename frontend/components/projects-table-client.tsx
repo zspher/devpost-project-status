@@ -25,9 +25,12 @@ import {
 	ArrowUpDown,
 	ChevronDown,
 	ChevronRight,
+	Pencil,
 } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { type KeyboardEvent, useState, useTransition } from "react";
 import { DeleteProjectButton } from "@/components/delete-project-button";
+import { EditProjectControls } from "@/components/edit-project-controls";
 import { ProjectRow } from "@/components/project-row";
 import { RefreshProjectButton } from "@/components/refresh-project-button";
 import { Button } from "@/components/ui/button";
@@ -47,7 +50,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import type { Project, ProjectStatus } from "@/lib/api";
+import {
+	type Project,
+	type ProjectStatus,
+	type ProjectUpdatePayload,
+	updateProject,
+} from "@/lib/api";
 
 const features = tableFeatures({
 	columnFilteringFeature,
@@ -124,117 +132,262 @@ function SortableHeader({
 
 const helper = createColumnHelper<typeof features, Project>();
 
-const columns = helper.columns([
-	helper.display({
-		id: "expander",
-		header: () => <span className="sr-only">Expand</span>,
-		cell: ({ row }) => (
-			<Button
-				type="button"
-				variant="ghost"
-				size="icon-xs"
-				aria-expanded={row.getIsExpanded()}
-				aria-label={
-					row.getIsExpanded()
-						? `Collapse commit details for ${row.original.name}`
-						: `Expand commit details for ${row.original.name}`
-				}
-				onClick={row.getToggleExpandedHandler()}
-			>
-				{row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
-			</Button>
-		),
-		enableSorting: false,
-		meta: { className: "w-8 pr-0" },
-	}),
-	helper.accessor("name", {
-		header: ({ column }) => <SortableHeader column={column} label="Name" />,
-		sortFn: sortFn_text,
-		meta: { className: "font-medium" },
-	}),
-	helper.accessor("status", {
-		header: ({ column }) => <SortableHeader column={column} label="Status" />,
-		cell: (info) => <StatusBadge status={info.getValue()} />,
-		sortFn: sortFn_text,
-	}),
-	helper.accessor("total_commits", {
-		header: ({ column }) => <SortableHeader column={column} label="Commits" />,
-		cell: (info) => info.getValue() ?? "—",
-		sortFn: (rowA, rowB, columnId) => {
-			const a = rowA.getValue<number | null>(columnId);
-			const b = rowB.getValue<number | null>(columnId);
-			if (a == null && b == null) return 0;
-			if (a == null) return 1;
-			if (b == null) return -1;
-			return a - b;
-		},
-	}),
-	helper.accessor("git_url", {
-		header: "Git URL",
-		enableSorting: false,
-		cell: (info) => {
-			const url = info.getValue();
-			return url ? (
-				<a
-					href={url}
-					target="_blank"
-					rel="noreferrer"
-					className="text-primary underline-offset-4 hover:underline"
+interface EditContext {
+	editingId: number | null;
+	draft: ProjectUpdatePayload;
+	saving: boolean;
+	saveError: string | null;
+	onStartEdit: (project: Project) => void;
+	onDraftChange: (field: keyof ProjectUpdatePayload, value: string) => void;
+	onSave: () => void;
+	onCancel: () => void;
+}
+
+function buildColumns(edit: EditContext) {
+	const isEditing = (project: Project) => project.id === edit.editingId;
+	const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === "Enter") edit.onSave();
+		else if (event.key === "Escape") edit.onCancel();
+	};
+
+	return helper.columns([
+		helper.display({
+			id: "expander",
+			header: () => <span className="sr-only">Expand</span>,
+			cell: ({ row }) => (
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-xs"
+					aria-expanded={row.getIsExpanded()}
+					aria-label={
+						row.getIsExpanded()
+							? `Collapse commit details for ${row.original.name}`
+							: `Expand commit details for ${row.original.name}`
+					}
+					onClick={row.getToggleExpandedHandler()}
 				>
-					{url}
-				</a>
-			) : (
-				"—"
-			);
-		},
-		meta: { className: "max-w-48 truncate" },
-	}),
-	helper.accessor("devpost_url", {
-		header: "Devpost URL",
-		enableSorting: false,
-		cell: (info) => (
-			<a
-				href={info.getValue()}
-				target="_blank"
-				rel="noreferrer"
-				className="text-primary underline-offset-4 hover:underline"
-			>
-				{info.getValue()}
-			</a>
-		),
-		meta: { className: "max-w-48 truncate" },
-	}),
-	helper.accessor((project) => project.last_commit?.date ?? null, {
-		id: "last_commit",
-		enableSorting: false,
-		filterFn: (row, columnId, filterValue) => {
-			const iso = row.getValue<string | null>(columnId);
-			if (iso == null) return false;
-			// Interpret the datetime-local value as UTC-6
-			return new Date(iso) >= new Date(`${String(filterValue)}:00-06:00`);
-		},
-	}),
-	helper.display({
-		id: "actions",
-		header: () => <span className="sr-only">Actions</span>,
-		cell: ({ row }) => (
-			<div className="flex items-center gap-1">
-				<RefreshProjectButton
-					projectId={row.original.id}
-					projectName={row.original.name}
-				/>
-				<DeleteProjectButton
-					projectId={row.original.id}
-					projectName={row.original.name}
-				/>
-			</div>
-		),
-		enableSorting: false,
-	}),
-]);
+					{row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
+				</Button>
+			),
+			enableSorting: false,
+			meta: { className: "w-8 pr-0" },
+		}),
+		helper.accessor("name", {
+			header: ({ column }) => <SortableHeader column={column} label="Name" />,
+			sortFn: sortFn_text,
+			cell: (info) =>
+				isEditing(info.row.original) ? (
+					<Input
+						value={edit.draft.name}
+						onChange={(event) => edit.onDraftChange("name", event.target.value)}
+						onKeyDown={handleKeyDown}
+						aria-label="Project name"
+						disabled={edit.saving}
+						className="min-w-32"
+					/>
+				) : (
+					info.getValue()
+				),
+			meta: { className: "font-medium" },
+		}),
+		helper.accessor("status", {
+			header: ({ column }) => <SortableHeader column={column} label="Status" />,
+			cell: (info) => <StatusBadge status={info.getValue()} />,
+			sortFn: sortFn_text,
+		}),
+		helper.accessor("total_commits", {
+			header: ({ column }) => (
+				<SortableHeader column={column} label="Commits" />
+			),
+			cell: (info) => info.getValue() ?? "—",
+			sortFn: (rowA, rowB, columnId) => {
+				const a = rowA.getValue<number | null>(columnId);
+				const b = rowB.getValue<number | null>(columnId);
+				if (a == null && b == null) return 0;
+				if (a == null) return 1;
+				if (b == null) return -1;
+				return a - b;
+			},
+		}),
+		helper.accessor("git_url", {
+			header: "Git URL",
+			enableSorting: false,
+			cell: (info) => {
+				if (isEditing(info.row.original)) {
+					return (
+						<Input
+							value={edit.draft.git_url}
+							onChange={(event) =>
+								edit.onDraftChange("git_url", event.target.value)
+							}
+							onKeyDown={handleKeyDown}
+							aria-label="Git URL"
+							disabled={edit.saving}
+							className="min-w-56"
+						/>
+					);
+				}
+				const url = info.getValue();
+				return url ? (
+					<a
+						href={url}
+						target="_blank"
+						rel="noreferrer"
+						className="block max-w-48 truncate text-primary underline-offset-4 hover:underline"
+					>
+						{url}
+					</a>
+				) : (
+					"—"
+				);
+			},
+		}),
+		helper.accessor("devpost_url", {
+			header: "Devpost URL",
+			enableSorting: false,
+			cell: (info) =>
+				isEditing(info.row.original) ? (
+					<Input
+						value={edit.draft.devpost_url}
+						onChange={(event) =>
+							edit.onDraftChange("devpost_url", event.target.value)
+						}
+						onKeyDown={handleKeyDown}
+						aria-label="Devpost URL"
+						disabled={edit.saving}
+						className="min-w-56"
+					/>
+				) : (
+					<a
+						href={info.getValue()}
+						target="_blank"
+						rel="noreferrer"
+						className="block max-w-48 truncate text-primary underline-offset-4 hover:underline"
+					>
+						{info.getValue()}
+					</a>
+				),
+		}),
+		helper.accessor((project) => project.last_commit?.date ?? null, {
+			id: "last_commit",
+			enableSorting: false,
+			filterFn: (row, columnId, filterValue) => {
+				const iso = row.getValue<string | null>(columnId);
+				if (iso == null) return false;
+				// Interpret the datetime-local value as UTC-6
+				return new Date(iso) >= new Date(`${String(filterValue)}:00-06:00`);
+			},
+		}),
+		helper.display({
+			id: "actions",
+			header: () => <span className="sr-only">Actions</span>,
+			cell: ({ row }) =>
+				isEditing(row.original) ? (
+					<EditProjectControls
+						projectName={row.original.name}
+						saving={edit.saving}
+						error={edit.saveError}
+						onSave={edit.onSave}
+						onCancel={edit.onCancel}
+					/>
+				) : (
+					<div className="flex items-center gap-1">
+						<Button
+							type="button"
+							variant="ghost"
+							size="icon-xs"
+							aria-label={`Edit ${row.original.name}`}
+							title={`Edit ${row.original.name}`}
+							onClick={() => edit.onStartEdit(row.original)}
+						>
+							<Pencil />
+						</Button>
+						<RefreshProjectButton
+							projectId={row.original.id}
+							projectName={row.original.name}
+						/>
+						<DeleteProjectButton
+							projectId={row.original.id}
+							projectName={row.original.name}
+						/>
+					</div>
+				),
+			enableSorting: false,
+		}),
+	]);
+}
 
 export function ProjectsTableClient({ projects }: { projects: Project[] }) {
+	const router = useRouter();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [editingId, setEditingId] = useState<number | null>(null);
+	const [draft, setDraft] = useState<ProjectUpdatePayload>({
+		name: "",
+		git_url: "",
+		devpost_url: "",
+	});
+	const [saving, setSaving] = useState(false);
+	const [saveError, setSaveError] = useState<string | null>(null);
+	const [, startTransition] = useTransition();
+
+	function startEditing(project: Project) {
+		setEditingId(project.id);
+		setDraft({
+			name: project.name,
+			git_url: project.git_url,
+			devpost_url: project.devpost_url,
+		});
+		setSaveError(null);
+	}
+
+	function cancelEditing() {
+		setEditingId(null);
+		setSaveError(null);
+	}
+
+	function updateDraft(field: keyof ProjectUpdatePayload, value: string) {
+		setDraft((previous) => ({ ...previous, [field]: value }));
+	}
+
+	async function saveEditing() {
+		if (editingId === null || saving) return;
+		const payload = {
+			name: draft.name.trim(),
+			git_url: draft.git_url.trim(),
+			devpost_url: draft.devpost_url.trim(),
+		};
+		if (!payload.name || !payload.devpost_url) {
+			setSaveError("Name and Devpost URL are required");
+			return;
+		}
+		setSaving(true);
+		setSaveError(null);
+		try {
+			await updateProject(editingId, payload);
+			setEditingId(null);
+			startTransition(() => {
+				router.refresh();
+			});
+		} catch (error) {
+			setSaveError(
+				error instanceof Error ? error.message : "Failed to update project",
+			);
+		} finally {
+			setSaving(false);
+		}
+	}
+
+	const columns = buildColumns({
+		editingId,
+		draft,
+		saving,
+		saveError,
+		onStartEdit: startEditing,
+		onDraftChange: updateDraft,
+		onSave: saveEditing,
+		onCancel: cancelEditing,
+	});
 
 	const table = useTable({
 		features,
